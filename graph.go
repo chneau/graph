@@ -5,23 +5,25 @@ import (
 	"strings"
 )
 
-type Graph struct {
-	Vertices map[int]*Vertex
+type Graph map[int]*Vertex
+
+func (g Graph) Best(from, to int) (int, []int) {
+	return 0, nil
 }
 
-func (g *Graph) AddEdge(from, to, cost int) {
-	if _, exist := g.Vertices[from]; !exist {
+func (g Graph) AddEdge(from, to, cost int) {
+	if _, exist := g[from]; !exist {
 		v := NewVertex()
 		v.AddEdge(to, cost)
-		g.Vertices[from] = v
+		g[from] = v
 		return
 	}
-	g.Vertices[from].AddEdge(to, cost)
+	g[from].AddEdge(to, cost)
 }
 
-func (g *Graph) String() string {
+func (g Graph) String() string {
 	str := ""
-	for from, vertex := range g.Vertices {
+	for from, vertex := range g {
 		str += "("
 		vertexstr := []string{}
 		for _, to := range vertex.Order {
@@ -33,9 +35,7 @@ func (g *Graph) String() string {
 	return str
 }
 
-func New() *Graph {
-	g := &Graph{
-		Vertices: map[int]*Vertex{},
-	}
+func New() Graph {
+	g := map[int]*Vertex{}
 	return g
 }

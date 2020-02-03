@@ -11,7 +11,7 @@ type Vertex struct {
 
 func (v *Vertex) Sort() {
 	sort.Slice(v.Order, func(i, j int) bool {
-		return v.Neighbours[v.Order[i]] > v.Neighbours[v.Order[j]]
+		return v.Neighbours[v.Order[i]] < v.Neighbours[v.Order[j]]
 	})
 }
 
