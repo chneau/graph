@@ -40,11 +40,10 @@ func (g Graph) Best(from, to int) (int, []int) {
 		if visiting == to {
 			break
 		}
-		// log.Println(visiting, vertices[1], vertices[3], vertices[to])
 		toVisit = toVisit[1:]                     // remove from tovisit
 		visited[visiting] = true                  // mark visited
-		sort.Slice(toVisit, func(a, b int) bool { // sort tovisit
-			return vertices[a].Distance < vertices[b].Distance
+		sort.Slice(toVisit, func(i, j int) bool { // sort tovisit
+			return vertices[toVisit[i]].Distance < vertices[toVisit[j]].Distance
 		})
 	}
 	if _, exist := vertices[to]; !exist {
