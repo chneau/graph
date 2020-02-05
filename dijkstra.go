@@ -1,6 +1,8 @@
 package graph
 
-import "sort"
+import (
+	"sort"
+)
 
 func DijkstraShortest(g Graph, from, to int) (int, []int) {
 	type VertexInfo struct {
@@ -21,13 +23,17 @@ func DijkstraShortest(g Graph, from, to int) (int, []int) {
 			}
 			v := g[visiting].Neighbours[k]
 			if _, exist := vertices[k]; !exist { // if doenst exist, add vertex
-				vertices[k] = &VertexInfo{Distance: v + vertices[visiting].Distance, Path: append(vertices[visiting].Path, k)}
+				vertices[k] = &VertexInfo{
+					Distance: v + vertices[visiting].Distance,
+					Path:     append(vertices[visiting].Path, k),
+				}
 				toVisit = append(toVisit, k)
 			} else {
 				newDistance := v + vertices[visiting].Distance
 				if vertices[k].Distance > newDistance { // update only if better
 					vertices[k].Distance = newDistance
-					vertices[k].Path = append(vertices[visiting].Path[:len(vertices[visiting].Path):len(vertices[visiting].Path)], k)
+					lp := len(vertices[visiting].Path)
+					vertices[k].Path = append(vertices[visiting].Path[:lp:lp], k)
 				}
 			}
 		}
