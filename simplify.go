@@ -59,10 +59,15 @@ func simplify(g Graph) {
 			continue
 		}
 		to := g[mid].Order[0]
-		simplifyVertices(g, from, mid, to)
+		ok := simplifyVertices(g, from, mid, to)
+		if !ok {
+			log.Println("NOT OK FOR", from, mid, to)
+		}
 		delete(g, mid)
 	}
 }
+
+//
 func biSimplify(g Graph) {
 	optimisable := map[int]bool{}
 	where := map[int][]int{}
@@ -93,29 +98,43 @@ func biSimplify(g Graph) {
 		if _, exist := g[to]; !exist {
 			continue
 		}
+		if _, exist := g[from].Neighbours[mid]; !exist {
+			continue
+		}
+		if _, exist := g[mid].Neighbours[to]; !exist {
+			continue
+		}
+		if from == mid {
+			// RemoveEdge(g[from], mid)
+			continue
+		}
+		if mid == to {
+			// RemoveEdge(g[mid], to)
+			continue
+		}
 		ok := simplifyVertices(g, from, mid, to)
 		if !ok {
-			log.Println(ok)
+			log.Println("1 NOT OK FOR", from, mid, to)
 		}
 		ok = simplifyVertices(g, to, mid, from)
 		if !ok {
-			log.Println(ok)
+			log.Println("2 NOT OK FOR", from, mid, to)
 		}
 		delete(g, mid)
 	}
 }
 
-func simplifyVertices(g Graph, f, m, t int) bool {
-	if _, exist := g[f].Neighbours[m]; !exist {
+func simplifyVertices(g Graph, from, mid, to int) bool {
+	if _, exist := g[from].Neighbours[mid]; !exist {
 		return false
 	}
-	if _, exist := g[m].Neighbours[t]; !exist {
+	if _, exist := g[mid].Neighbours[to]; !exist {
 		return false
 	}
-	cost1 := g[f].Neighbours[m]
-	cost2 := g[m].Neighbours[t]
+	cost1 := g[from].Neighbours[mid]
+	cost2 := g[mid].Neighbours[to]
 	cost := cost1 + cost2
-	RemoveEdge(g[f], m)
-	g[f].AddEdge(t, cost)
+	RemoveEdge(g[from], mid)
+	g[from].AddEdge(to, cost)
 	return true
 }
