@@ -42,7 +42,11 @@ func simplify(g Graph) {
 	}
 	for mid := range optimisable {
 		from := where[mid][0]
-		if _, exist := g[from]; !exist || mid == from { // a round has been reduced
+		if mid == from { // a round has been reduced
+			RemoveEdge(g[from], mid)
+			continue
+		}
+		if _, exist := g[from]; !exist {
 			continue
 		}
 		to := g[mid].Order[0]
