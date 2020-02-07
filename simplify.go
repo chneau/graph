@@ -1,5 +1,7 @@
 package graph
 
+import "log"
+
 func RemoveEdge(v *Vertex, edge int) {
 	delete(v.Neighbours, edge)
 	for i := range v.Order {
@@ -13,6 +15,13 @@ func Simplify(g Graph) {
 	l := len(g)
 	for {
 		simplify(g)
+		if l == len(g) {
+			break
+		}
+		l = len(g)
+	}
+	for {
+		biSimplify(g)
 		if l == len(g) {
 			break
 		}
@@ -54,17 +63,6 @@ func simplify(g Graph) {
 		delete(g, mid)
 	}
 }
-
-func BiSimplify(g Graph) {
-	l := len(g)
-	for {
-		biSimplify(g)
-		if l == len(g) {
-			break
-		}
-		l = len(g)
-	}
-}
 func biSimplify(g Graph) {
 	optimisable := map[int]bool{}
 	where := map[int][]int{}
@@ -88,20 +86,22 @@ func biSimplify(g Graph) {
 	}
 	for mid := range optimisable {
 		from := where[mid][0]
-		if mid == from { // a round has been reduced
-			RemoveEdge(g[from], mid)
-			continue
-		}
+		to := where[mid][1]
 		if _, exist := g[from]; !exist {
 			continue
 		}
-		to := g[mid].Order[0]
-		cost1 := g[mid].Neighbours[to]
-		cost2 := g[from].Neighbours[mid]
-		cost := cost1 + cost2
+		if _, exist := g[to]; !exist {
+			continue
+		}
+		ok := simplifyVertices(g, from, mid, to)
+		if !ok {
+			log.Println(ok)
+		}
+		ok = simplifyVertices(g, to, mid, from)
+		if !ok {
+			log.Println(ok)
+		}
 		delete(g, mid)
-		RemoveEdge(g[from], mid)
-		g[from].AddEdge(to, cost)
 	}
 }
 
