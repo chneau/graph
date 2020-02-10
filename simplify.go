@@ -98,10 +98,19 @@ func biSimplify(g Graph) {
 		if _, exist := g[to]; !exist {
 			continue
 		}
+		if _, exist := g[mid]; !exist {
+			continue
+		}
 		if _, exist := g[from].Neighbours[mid]; !exist {
 			continue
 		}
 		if _, exist := g[mid].Neighbours[to]; !exist {
+			continue
+		}
+		if _, exist := g[to].Neighbours[mid]; !exist {
+			continue
+		}
+		if _, exist := g[mid].Neighbours[from]; !exist {
 			continue
 		}
 		if from == mid {
