@@ -52,13 +52,19 @@ func simplify(g Graph) {
 	for mid := range optimisable {
 		from := where[mid][0]
 		if mid == from { // a round has been reduced
-			RemoveEdge(g[from], mid)
+			// RemoveEdge(g[from], mid)
 			continue
 		}
 		if _, exist := g[from]; !exist {
 			continue
 		}
 		to := g[mid].Order[0]
+		if mid == to {
+			continue
+		}
+		if from == to { // don't remove end of bi directional path
+			continue
+		}
 		ok := simplifyVertices(g, from, mid, to)
 		if !ok {
 			log.Println("NOT OK FOR", from, mid, to)
