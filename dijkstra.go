@@ -51,8 +51,7 @@ func DijkstraShortest(g Graph, from, to int) (int, []int) {
 	visited := map[int]bool{}
 	toVisit := DLList{List: list.New()}
 	toVisit.InsertOrdered(vertices[from])
-	found := false
-	for toVisit.Len() > 0 && !found {
+	for toVisit.Len() > 0 {
 		visiting := toVisit.PopFront() // take the first to visit
 		for _, k := range g[visiting.ID].Order {
 			if visited[k] { // don't visit fully visited
