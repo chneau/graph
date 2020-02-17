@@ -44,7 +44,7 @@ func (l *DLList) PopFront() *VertexInfo {
 	return e.Value.(*VertexInfo)
 }
 
-func DijkstraShortest(g Graph, from, to int) (int, []int) {
+func DijkstraShortest(g Graph, from, to int) (int, []int, map[int]*VertexInfo) {
 	vertices := map[int]*VertexInfo{
 		from: &VertexInfo{ID: from, Path: []int{from}},
 	}
@@ -80,7 +80,7 @@ func DijkstraShortest(g Graph, from, to int) (int, []int) {
 		visited[visiting.ID] = true // mark visited
 	}
 	if _, exist := vertices[to]; !exist {
-		return 0, nil
+		return 0, nil, nil
 	}
-	return vertices[to].Distance, vertices[to].Path
+	return vertices[to].Distance, vertices[to].Path, vertices
 }
